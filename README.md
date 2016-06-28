@@ -12,7 +12,7 @@ Note that the number of layers can be calculated by the formula : `nb_layers = 4
 `import wide_residial_network as wrn`<br>
 `ip = Input(shape=(3, 32, 32)) # For CIFAR 100`
 
-`wrn_28_10 = create_wide_residual_network(ip, nb_classes=100, N=4, k=10, dropout=0.25, verbose=1)`
+`wrn_28_10 = wrn.create_wide_residual_network(ip, nb_classes=100, N=4, k=10, dropout=0.25, verbose=1)`
 
 `model = Model(ip, wrn_28_10)`
 
