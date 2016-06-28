@@ -5,7 +5,7 @@ Implementation of Wide Residual Networks from the paper <a href="http://arxiv.or
 ## Usage
 
 It can be used by importing the wide_residial_network script and using the create_wide_residual_network() method.
-There are several parameters which can be changed to increase the depth of width of the network.
+There are several parameters which can be changed to increase the depth or width of the network.
 
 `import wide_residial_network as wrn`<br>
 `ip = Input(shape=(3, 32, 32)) # For CIFAR 100`
