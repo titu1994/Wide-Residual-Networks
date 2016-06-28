@@ -2,8 +2,8 @@ from keras.layers import merge, Activation, Dropout, Flatten, Dense
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, AveragePooling2D
 from keras.layers.normalization import BatchNormalization
 
-def initial_conv(input, init_filter=16):
-    x = Convolution2D(init_filter, 3, 3, border_mode='same')(input)
+def initial_conv(input):
+    x = Convolution2D(16, 3, 3, border_mode='same')(input)
     x = BatchNormalization(axis=1)(x)
     x = Activation('relu')(x)
     return x
@@ -68,8 +68,8 @@ def conv3_block(input, k=1, dropout=0.0):
     m = merge([init, x], mode='sum')
     return m
 
-def create_wide_residual_network(input, nb_classes=100, init_filter=16, N=2, k=1, dropout=0.0, verbose=1):
-    x = initial_conv(input, init_filter)
+def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, verbose=1):
+    x = initial_conv(input)
     nb_conv = 4
 
     for i in range(N):
