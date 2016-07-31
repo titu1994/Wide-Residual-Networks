@@ -26,13 +26,13 @@ Training was done by using the Adam optimizer instead of SGD+Momentum for faster
 <img src="https://raw.githubusercontent.com/titu1994/Wide-Residual-Networks/master/plots/Validation curves.png" height=100% width=100%>
 
 ### WRN-28-8
-The WRN-28-10 model could not be used due to GPU memory constraints, hence WRN-28-8 model was used instead with a batch size of 64. Each epoch requires roughly 886 seconds, and therefore this was only run for 100 epochs. 
+The WRN-28-10 model could not be used due to GPU memory constraints, hence WRN-28-8 model was used instead with a batch size of 64. Each epoch requires roughly 886 seconds, and therefore this was only run for 100 epochs. It achieves a score of 95.08 %, less than the best score of 95.83 % obtained by the WRN-28-10 network.
 
-The Adam optimizer was used instead of SGD+Momentum for faster convergence. The history of training/validation accuracy and loss is shown as below. The script and weights for this model are also provided.
+The Adadelta optimizer was used instead of SGD+Momentum for faster convergence. The history of training/validation accuracy and loss is shown as below. The script and weights for this model are also provided.
 
-
+<img src="https://github.com/titu1994/Wide-Residual-Networks/blob/master/plots/WRN_28_8%20validation%20curves.png?raw=true" height=100% width=100%>
 
 ## Models
-The below model is the WRN-28-10 model which obtains the highest score in CIFAR 10.
+The below model is the WRN-28-8 model.
 
-<img src="https://raw.githubusercontent.com/titu1994/Wide-Residual-Networks/master/plots/WRN-28-10.png" height=100% width=100%>
+<img src="https://raw.githubusercontent.com/titu1994/Wide-Residual-Networks/master/plots/WRN-28-8.png" height=100% width=100%>
