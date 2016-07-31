@@ -69,6 +69,20 @@ def conv3_block(input, k=1, dropout=0.0):
     return m
 
 def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, verbose=1):
+    """
+    Creates a Wide Residual Network with specified parameters
+
+    :param input: Input Keras object
+    :param nb_classes: Number of output classes
+    :param N: Depth of the network. Compute N = (n - 4) / 6.
+              Example : For a depth of 16, n = 16, N = (16 - 4) / 6 = 2
+              Example2: For a depth of 28, n = 28, N = (28 - 4) / 6 = 4
+              Example3: For a depth of 40, n = 40, N = (40 - 4) / 6 = 9
+    :param k: Width of the network.
+    :param dropout: Adds dropout if value is greater than 0.0
+    :param verbose: Debug info to describe created WRN
+    :return:
+    """
     x = initial_conv(input)
     nb_conv = 4
 
