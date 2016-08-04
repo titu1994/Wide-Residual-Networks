@@ -49,13 +49,13 @@ wrn_28_8 = wrn.create_wide_residual_network(init, nb_classes=10, N=4, k=8, dropo
 model = Model(input=init, output=wrn_28_8)
 
 model.summary()
-plot(model, "WRN-28-8.png", show_shapes=False)
+#plot(model, "WRN-28-8.png", show_shapes=False)
 
 model.compile(loss="categorical_crossentropy", optimizer="adadelta", metrics=["acc"])
 print("Finished compiling")
 print("Allocating GPU memory")
 
-model.load_weights("WRN-28-8 Weights.h5")
+model.load_weights("weights/WRN-28-8 Weights.h5")
 print("Model loaded.")
 
 #model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), samples_per_epoch=len(trainX), nb_epoch=nb_epoch,

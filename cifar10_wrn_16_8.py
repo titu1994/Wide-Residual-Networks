@@ -45,10 +45,10 @@ model.summary()
 
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["acc"])
 print("Finished compiling")
-print("Allocating GPU memory")
 
-model.load_weights("WRN-16-8 Weights.h5")
+model.load_weights("weights/WRN-16-8 Weights.h5")
 print("Model loaded.")
+print("Allocating GPU memory")
 
 #model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), samples_per_epoch=len(trainX), nb_epoch=nb_epoch,
 #                    callbacks=[callbacks.ModelCheckpoint("WRN-16-8 Weights.h5", monitor="val_acc", save_best_only=True)],
