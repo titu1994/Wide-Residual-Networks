@@ -31,7 +31,7 @@ def conv1_block(input, k=1, dropout=0.0):
 def conv2_block(input, k=1, dropout=0.0):
     init = input
 
-    # Check if input number of filters is same as 16 * k, else create convolution2d for this input
+    # Check if input number of filters is same as 32 * k, else create convolution2d for this input
     if init._keras_shape[1] != 32 * k:
         init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
 
@@ -51,7 +51,7 @@ def conv2_block(input, k=1, dropout=0.0):
 def conv3_block(input, k=1, dropout=0.0):
     init = input
 
-    # Check if input number of filters is same as 16 * k, else create convolution2d for this input
+    # Check if input number of filters is same as 64 * k, else create convolution2d for this input
     if init._keras_shape[1] != 64 * k:
         init = Convolution2D(64 * k, 1, 1, activation='linear', border_mode='same')(init)
 
