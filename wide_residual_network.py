@@ -77,7 +77,7 @@ def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, v
     :param N: Depth of the network. Compute N = (n - 4) / 6.
               Example : For a depth of 16, n = 16, N = (16 - 4) / 6 = 2
               Example2: For a depth of 28, n = 28, N = (28 - 4) / 6 = 4
-              Example3: For a depth of 40, n = 40, N = (40 - 4) / 6 = 9
+              Example3: For a depth of 40, n = 40, N = (40 - 4) / 6 = 6
     :param k: Width of the network.
     :param dropout: Adds dropout if value is greater than 0.0
     :param verbose: Debug info to describe created WRN

@@ -35,7 +35,7 @@ init = Input(shape=(3, img_rows, img_cols),)
 
 # For WRN-16-8 put N = 2, k = 8
 # For WRN-28-10 put N = 4, k = 10
-# For WRN-40-4 put N = 9, k = 4
+# For WRN-40-4 put N = 6, k = 4
 wrn_16_8 = wrn.create_wide_residual_network(init, nb_classes=10, N=2, k=8, dropout=0.00)
 
 model = Model(input=init, output=wrn_16_8)
