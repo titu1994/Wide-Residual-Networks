@@ -3,16 +3,20 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D, AveragePooli
 from keras.layers.normalization import BatchNormalization
 from keras import backend as K
 
-channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
 def initial_conv(input):
     x = Convolution2D(16, 3, 3, border_mode='same')(input)
+
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
+
     x = BatchNormalization(axis=channel_axis)(x)
     x = Activation('relu')(x)
     return x
 
 def conv1_block(input, k=1, dropout=0.0):
     init = input
+
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     # Check if input number of filters is same as 16 * k, else create convolution2d for this input
     if init._keras_shape[1] != 16 * k:
@@ -34,6 +38,8 @@ def conv1_block(input, k=1, dropout=0.0):
 def conv2_block(input, k=1, dropout=0.0):
     init = input
 
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
+
     # Check if input number of filters is same as 32 * k, else create convolution2d for this input
     if init._keras_shape[1] != 32 * k:
         init = Convolution2D(32 * k, 1, 1, activation='linear', border_mode='same')(init)
@@ -53,6 +59,8 @@ def conv2_block(input, k=1, dropout=0.0):
 
 def conv3_block(input, k=1, dropout=0.0):
     init = input
+
+    channel_axis = 1 if K.image_dim_ordering() == "th" else -1
 
     # Check if input number of filters is same as 64 * k, else create convolution2d for this input
     if init._keras_shape[1] != 64 * k:
