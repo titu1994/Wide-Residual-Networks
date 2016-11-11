@@ -91,7 +91,7 @@ def conv3_block(input, k=1, dropout=0.0):
     m = merge([init, x], mode='sum')
     return m
 
-def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, verbose=1):
+def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.0, verbose=1):
     """
     Creates a Wide Residual Network with specified parameters
 
@@ -106,7 +106,9 @@ def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, v
     :param verbose: Debug info to describe created WRN
     :return:
     """
-    x = initial_conv(input)
+    ip = Input(shape=input_dim)
+
+    x = initial_conv(ip)
     nb_conv = 4
 
     for i in range(N):
@@ -130,19 +132,19 @@ def create_wide_residual_network(input, nb_classes=100, N=2, k=1, dropout=0.0, v
 
     x = Dense(nb_classes, activation='softmax')(x)
 
+    model = Model(ip, x)
+
     if verbose: print("Wide Residual Network-%d-%d created." % (nb_conv, k))
-    return x
+    return model
 
 if __name__ == "__main__":
     from keras.utils.visualize_util import plot
     from keras.layers import Input
     from keras.models import Model
 
-    init = Input(shape=(3, 32, 32))
+    init = (3, 32, 32)
 
     wrn_28_10 = create_wide_residual_network(init, nb_classes=100, N=4, k=10, dropout=0.25)
 
-    model = Model(init, wrn_28_10)
-
-    model.summary()
-    plot(model, "WRN-28-10.png", show_shapes=True, show_layer_names=True)
+    wrn_28_10.summary()
+    plot(wrn_28_10, "WRN-28-10.png", show_shapes=True, show_layer_names=True)
