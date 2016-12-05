@@ -3,12 +3,12 @@ import sklearn.metrics as metrics
 
 import wide_residual_network as wrn
 from keras.datasets import cifar10
-from keras.models import Model
-from keras.layers import Input
 import keras.callbacks as callbacks
 import keras.utils.np_utils as kutils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.visualize_util import plot
+
+from keras import backend as K
 
 batch_size = 64
 nb_epoch = 100
@@ -39,14 +39,12 @@ test_generator = ImageDataGenerator(featurewise_center=True,
 
 test_generator.fit(testX, seed=0, augment=True)
 
-init = Input(shape=(3, img_rows, img_cols),)
+init_shape = (3, 32, 32) if K.image_dim_ordering() == 'th' else (32, 32, 3)
 
 # For WRN-16-8 put N = 2, k = 8
 # For WRN-28-10 put N = 4, k = 10
 # For WRN-40-4 put N = 6, k = 4
-wrn_28_8 = wrn.create_wide_residual_network(init, nb_classes=10, N=4, k=8, dropout=0.0)
-
-model = Model(input=init, output=wrn_28_8)
+model = wrn.create_wide_residual_network(init_shape, nb_classes=10, N=4, k=8, dropout=0.0)
 
 model.summary()
 #plot(model, "WRN-28-8.png", show_shapes=False)
