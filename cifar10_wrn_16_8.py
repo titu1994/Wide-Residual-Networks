@@ -55,9 +55,11 @@ print("Allocating GPU memory")
 
 yPreds = model.predict(testX)
 yPred = np.argmax(yPreds, axis=1)
+yPred = kutils.to_categorical(yPred)
 yTrue = testY
 
 accuracy = metrics.accuracy_score(yTrue, yPred) * 100
 error = 100 - accuracy
 print("Accuracy : ", accuracy)
 print("Error : ", error)
+
