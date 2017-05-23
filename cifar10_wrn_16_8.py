@@ -6,7 +6,7 @@ from keras.datasets import cifar10
 import keras.callbacks as callbacks
 import keras.utils.np_utils as kutils
 from keras.preprocessing.image import ImageDataGenerator
-from keras.utils.visualize_util import plot
+from keras.utils import plot_model
 
 from keras import backend as K
 
@@ -39,7 +39,7 @@ init_shape = (3, 32, 32) if K.image_dim_ordering() == 'th' else (32, 32, 3)
 model = wrn.create_wide_residual_network(init_shape, nb_classes=10, N=2, k=8, dropout=0.00)
 
 model.summary()
-#plot(model, "WRN-16-8.png", show_shapes=False)
+#plot_model(model, "WRN-16-8.png", show_shapes=False)
 
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["acc"])
 print("Finished compiling")
@@ -48,10 +48,10 @@ model.load_weights("weights/WRN-16-8 Weights.h5")
 print("Model loaded.")
 print("Allocating GPU memory")
 
-#model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), samples_per_epoch=len(trainX), nb_epoch=nb_epoch,
+# model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), steps_per_epoch=len(trainX) // batch_size + 1, nb_epoch=nb_epoch,
 #                    callbacks=[callbacks.ModelCheckpoint("WRN-16-8 Weights.h5", monitor="val_acc", save_best_only=True)],
 #                    validation_data=(testX, testY),
-#                    nb_val_samples=testX.shape[0],)
+#                    validation_steps=testX.shape[0] // batch_size + 1,)
 
 yPreds = model.predict(testX)
 yPred = np.argmax(yPreds, axis=1)
