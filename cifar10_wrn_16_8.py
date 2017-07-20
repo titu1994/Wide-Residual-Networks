@@ -16,22 +16,17 @@ img_rows, img_cols = 32, 32
 
 (trainX, trainY), (testX, testY) = cifar10.load_data()
 
-trainX = np.concatenate((trainX, testX))
-trainY = np.concatenate((trainY, testY))
-
 trainX = trainX.astype('float32')
-trainX /= 255.0
+trainX = (trainX - trainX.mean(axis=0)) / (trainX.std(axis=0))
 testX = testX.astype('float32')
-testX /= 255.0
+testX = (testX - testX.mean(axis=0)) / (testX.std(axis=0))
 
 trainY = kutils.to_categorical(trainY)
 testY = kutils.to_categorical(testY)
 
 generator = ImageDataGenerator(rotation_range=10,
                                width_shift_range=5./32,
-                               height_shift_range=5./32)
-
-generator.fit(trainX, seed=0, augment=True)
+                               height_shift_range=5./32,)
 
 init_shape = (3, 32, 32) if K.image_dim_ordering() == 'th' else (32, 32, 3)
 
@@ -41,7 +36,7 @@ init_shape = (3, 32, 32) if K.image_dim_ordering() == 'th' else (32, 32, 3)
 model = wrn.create_wide_residual_network(init_shape, nb_classes=10, N=2, k=8, dropout=0.00)
 
 model.summary()
-#plot_model(model, "WRN-16-8.png", show_shapes=False)
+plot_model(model, "WRN-16-8.png", show_shapes=False)
 
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["acc"])
 print("Finished compiling")

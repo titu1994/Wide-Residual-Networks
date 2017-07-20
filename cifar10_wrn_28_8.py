@@ -10,34 +10,27 @@ from keras.utils import plot_model
 
 from keras import backend as K
 
-batch_size = 64
+batch_size = 100
 nb_epoch = 100
 img_rows, img_cols = 32, 32
 
 (trainX, trainY), (testX, testY) = cifar10.load_data()
 
 trainX = trainX.astype('float32')
-trainX /= 255.0
+trainX = (trainX - trainX.mean(axis=0)) / (trainX.std(axis=0))
 testX = testX.astype('float32')
-testX /= 255.0
+testX = (testX - testX.mean(axis=0)) / (testX.std(axis=0))
 
 tempY = testY
 trainY = kutils.to_categorical(trainY)
 testY = kutils.to_categorical(testY)
 
-generator = ImageDataGenerator(featurewise_center=True,
-                               featurewise_std_normalization=True,
-                               rotation_range=10,
+generator = ImageDataGenerator(rotation_range=10,
                                width_shift_range=5./32,
                                height_shift_range=5./32,
                                horizontal_flip=True)
 
 generator.fit(trainX, seed=0, augment=True)
-
-test_generator = ImageDataGenerator(featurewise_center=True,
-                                    featurewise_std_normalization=True,)
-
-test_generator.fit(testX, seed=0, augment=True)
 
 init_shape = (3, 32, 32) if K.image_dim_ordering() == 'th' else (32, 32, 3)
 
@@ -49,7 +42,7 @@ model = wrn.create_wide_residual_network(init_shape, nb_classes=10, N=4, k=8, dr
 model.summary()
 #plot_model(model, "WRN-28-8.png", show_shapes=False)
 
-model.compile(loss="categorical_crossentropy", optimizer="adadelta", metrics=["acc"])
+model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["acc"])
 print("Finished compiling")
 print("Allocating GPU memory")
 
@@ -58,8 +51,16 @@ print("Model loaded.")
 
 model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), steps_per_epoch=len(trainX) // batch_size + 1, nb_epoch=nb_epoch,
                    callbacks=[callbacks.ModelCheckpoint("WRN-28-8 Weights.h5", monitor="val_acc", save_best_only=True)],
-                   validation_data=test_generator.flow(testX, testY, batch_size=batch_size),
-                   validation_steps=testX.shape[0] // batch_size + 1,)
+                   validation_data=(testX, testY),
+                   validation_steps=testX.shape[0] // batch_size,)
 
-scores = model.evaluate_generator(test_generator.flow(testX, testY, nb_epoch), testX.shape[0] // batch_size + 1)
-print("Accuracy = %f" % (100 * scores[1]))
+yPreds = model.predict(testX)
+yPred = np.argmax(yPreds, axis=1)
+yPred = kutils.to_categorical(yPred)
+yTrue = testY
+
+accuracy = metrics.accuracy_score(yTrue, yPred) * 100
+error = 100 - accuracy
+print("Accuracy : ", accuracy)
+print("Error : ", error)
+
