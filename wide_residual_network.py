@@ -15,8 +15,8 @@ def initial_conv(input):
     return x
 
 
-def expand_conv(init, base, k):
-    x = Convolution2D(base * k, (3, 3), padding='same')(init)
+def expand_conv(init, base, k, strides=(1, 1)):
+    x = Convolution2D(base * k, (3, 3), padding='same', strides=strides)(init)
 
     channel_axis = 1 if K.image_data_format() == "channels_first" else -1
 
@@ -25,7 +25,7 @@ def expand_conv(init, base, k):
 
     x = Convolution2D(base * k, (3, 3), padding='same')(x)
 
-    skip = Convolution2D(base * k, (1, 1), padding='same')(init)
+    skip = Convolution2D(base * k, (1, 1), padding='same', strides=strides)(init)
 
     m = Add()([x, skip])
 
@@ -112,17 +112,13 @@ def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.
         x = conv1_block(x, k, dropout)
         nb_conv += 2
 
-    x = MaxPooling2D((2,2))(x)
-
-    x = expand_conv(x, 32, k)
+    x = expand_conv(x, 32, k, strides=(2, 2))
 
     for i in range(N - 1):
         x = conv2_block(x, k, dropout)
         nb_conv += 2
 
-    x = MaxPooling2D((2,2))(x)
-
-    x = expand_conv(x, 64, k)
+    x = expand_conv(x, 64, k, strides=(2, 2))
 
     for i in range(N - 1):
         x = conv3_block(x, k, dropout)

@@ -10,11 +10,14 @@ from keras.utils import plot_model
 
 from keras import backend as K
 
-batch_size = 64
+batch_size = 100
 nb_epoch = 100
 img_rows, img_cols = 32, 32
 
 (trainX, trainY), (testX, testY) = cifar10.load_data()
+
+trainX = np.concatenate((trainX, testX))
+trainY = np.concatenate((trainY, testY))
 
 trainX = trainX.astype('float32')
 trainX /= 255.0
@@ -26,8 +29,7 @@ testY = kutils.to_categorical(testY)
 
 generator = ImageDataGenerator(rotation_range=10,
                                width_shift_range=5./32,
-                               height_shift_range=5./32,
-                               horizontal_flip=True)
+                               height_shift_range=5./32)
 
 generator.fit(trainX, seed=0, augment=True)
 
@@ -44,14 +46,16 @@ model.summary()
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["acc"])
 print("Finished compiling")
 
-model.load_weights("weights/WRN-16-8 Weights.h5")
+#model.load_weights("weights/WRN-16-8 Weights.h5")
 print("Model loaded.")
-print("Allocating GPU memory")
 
-# model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), steps_per_epoch=len(trainX) // batch_size + 1, nb_epoch=nb_epoch,
-#                    callbacks=[callbacks.ModelCheckpoint("WRN-16-8 Weights.h5", monitor="val_acc", save_best_only=True)],
-#                    validation_data=(testX, testY),
-#                    validation_steps=testX.shape[0] // batch_size + 1,)
+model.fit_generator(generator.flow(trainX, trainY, batch_size=batch_size), steps_per_epoch=len(trainX) // batch_size, epochs=nb_epoch,
+                   callbacks=[callbacks.ModelCheckpoint("weights/WRN-16-8 Weights.h5",
+                                                        monitor="val_acc",
+                                                        save_best_only=True,
+                                                        verbose=1)],
+                   validation_data=(testX, testY),
+                   validation_steps=testX.shape[0] // batch_size,)
 
 yPreds = model.predict(testX)
 yPred = np.argmax(yPreds, axis=1)
