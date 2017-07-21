@@ -111,6 +111,8 @@ def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.
     :param verbose: Debug info to describe created WRN
     :return:
     """
+    channel_axis = 1 if K.image_data_format() == "channels_first" else -1
+
     ip = Input(shape=input_dim)
 
     x = initial_conv(ip)
@@ -122,11 +124,17 @@ def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.
         x = conv1_block(x, k, dropout)
         nb_conv += 2
 
+    x = BatchNormalization(axis=channel_axis, momentum=0.1, epsilon=1e-5, gamma_initializer='uniform')(x)
+    x = Activation('relu')(x)
+
     x = expand_conv(x, 32, k, strides=(2, 2))
 
     for i in range(N - 1):
         x = conv2_block(x, k, dropout)
         nb_conv += 2
+
+    x = BatchNormalization(axis=channel_axis, momentum=0.1, epsilon=1e-5, gamma_initializer='uniform')(x)
+    x = Activation('relu')(x)
 
     x = expand_conv(x, 64, k, strides=(2, 2))
 
@@ -151,8 +159,8 @@ if __name__ == "__main__":
 
     init = (32, 32, 3)
 
-    wrn_28_10 = create_wide_residual_network(init, nb_classes=10, N=2, k=8, dropout=0.25)
+    wrn_28_10 = create_wide_residual_network(init, nb_classes=10, N=2, k=2, dropout=0.0)
 
     wrn_28_10.summary()
 
-    #plot_model(wrn_28_10, "WRN-16-2.png", show_shapes=True, show_layer_names=True)
+    plot_model(wrn_28_10, "WRN-16-2.png", show_shapes=True, show_layer_names=True)
