@@ -141,7 +141,10 @@ def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.
     for i in range(N - 1):
         x = conv3_block(x, k, dropout)
         nb_conv += 2
-
+        
+    x = BatchNormalization(axis=channel_axis, momentum=0.1, epsilon=1e-5, gamma_initializer='uniform')(x)
+    x = Activation('relu')(x)
+    
     x = AveragePooling2D((8, 8))(x)
     x = Flatten()(x)
 
