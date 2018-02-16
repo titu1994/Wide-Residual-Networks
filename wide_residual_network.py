@@ -121,7 +121,7 @@ def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.
     x = expand_conv(x, 16, k)
     nb_conv += 2
     
-    for i in range(N-1):
+    for i in range(N - 1):
         x = conv1_block(x, k, dropout)
         nb_conv += 2
 
@@ -131,7 +131,7 @@ def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.
     x = expand_conv(x, 32, k, strides=(2, 2))
     nb_conv += 2
     
-    for i in range(N-1):
+    for i in range(N - 1):
         x = conv2_block(x, k, dropout)
         nb_conv += 2
 
@@ -141,7 +141,7 @@ def create_wide_residual_network(input_dim, nb_classes=100, N=2, k=1, dropout=0.
     x = expand_conv(x, 64, k, strides=(2, 2))
     nb_conv += 2
     
-    for i in range(N-1):
+    for i in range(N - 1):
         x = conv3_block(x, k, dropout)
         nb_conv += 2
         
